@@ -4,11 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport"
-        content="width=device-width,initial-scale=1">
+        content="width=device-width, initial-scale=1">
   <title>استمارة تسجيل البيانات</title>
 
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -65,11 +67,12 @@
     }
 
     button:disabled {
-      opacity: .55;
+      opacity: 0.55;
       cursor: wait;
     }
 
-    .choices, .controls {
+    .choices,
+    .controls {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
@@ -81,7 +84,8 @@
       margin-top: 17px;
     }
 
-    video, #preview {
+    video,
+    #preview {
       width: 100%;
       max-height: 360px;
       object-fit: contain;
@@ -122,8 +126,13 @@
     }
 
     @media (max-width: 370px) {
-      main { padding: 18px; }
-      .choices { grid-template-columns: 1fr; }
+      main {
+        padding: 18px;
+      }
+
+      .choices {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -138,6 +147,7 @@
     target="_blank"
   >
     <label for="fullName">الاسم الكامل</label>
+
     <input
       id="fullName"
       name="fullName"
@@ -148,6 +158,7 @@
     >
 
     <label for="phone">رقم الهاتف</label>
+
     <input
       id="phone"
       name="phone"
@@ -163,13 +174,17 @@
       <button
         type="button"
         id="startCamera"
-      >📷 التقاط صورة</button>
+      >
+        📷 التقاط صورة
+      </button>
 
       <button
         type="button"
         id="chooseFile"
         class="secondary"
-      >📁 تحميل صورة</button>
+      >
+        📁 تحميل صورة
+      </button>
     </div>
 
     <input
@@ -191,17 +206,24 @@
         <button
           type="button"
           id="capture"
-        >التقاط الآن</button>
+        >
+          التقاط الآن
+        </button>
 
         <button
           type="button"
           id="stopCamera"
           class="secondary"
-        >إغلاق الكاميرا</button>
+        >
+          إغلاق الكاميرا
+        </button>
       </div>
     </section>
 
-    <img id="preview" alt="معاينة الصورة">
+    <img
+      id="preview"
+      alt="معاينة الصورة"
+    >
 
     <input
       type="hidden"
@@ -222,7 +244,10 @@
     >
 
     <div class="trap" aria-hidden="true">
-      <label for="website">اترك هذا الحقل فارغاً</label>
+      <label for="website">
+        اترك هذا الحقل فارغاً
+      </label>
+
       <input
         id="website"
         name="website"
@@ -235,28 +260,29 @@
     <p class="hint">
       يمكنك التقاط صورة مباشرة باستخدام الكاميرا،
       أو تحميل صورة محفوظة من جهازك.
-      ستظهر معاينة قبل إرسال الاستمارة.
+      ستظهر معاينة الصورة قبل الإرسال.
     </p>
 
     <button id="send" type="submit">
       إرسال الاستمارة
     </button>
 
-    <p id="message" role="status"
-       aria-live="polite"></p>
+    <p
+      id="message"
+      role="status"
+      aria-live="polite"
+    ></p>
   </form>
 </main>
 
 <script>
 'use strict';
 
-/**
- * IMPORTANT:
- * Replace the URL below with your own
- * deployed Apps Script Web App URL ending /exec.
+/*
+ * Your actual Google Apps Script Web App URL.
  */
 const SCRIPT_URL =
-  'PASTE_YOUR_GOOGLE_APPS_SCRIPT_EXEC_URL_HERE';
+  'https://script.google.com/macros/s/AKfycbxBJs0Y6ukHgicPMXOOqXf2_R3LC7jbSAewhPFilK8vU-H79r5MzHimu5jDv2Hio2mRyA/exec';
 
 const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
 
@@ -271,9 +297,8 @@ let stream = null;
 let imageReady = false;
 let busy = false;
 
-
-/**
- * Stop the camera and release its tracks.
+/*
+ * Stop the camera.
  */
 function stopCamera() {
   if (stream) {
@@ -285,11 +310,8 @@ function stopCamera() {
   $('cameraArea').style.display = 'none';
 }
 
-
-/**
- * Scale photo and encode as JPEG.
- *
- * Smaller output is safer for Apps Script POST.
+/*
+ * Compress and convert image to JPEG.
  */
 async function encodeJPEG(source, width, height) {
   if (!width || !height) {
@@ -303,8 +325,15 @@ async function encodeJPEG(source, width, height) {
 
   const canvas = document.createElement('canvas');
 
-  canvas.width = Math.max(1, Math.round(width * scale));
-  canvas.height = Math.max(1, Math.round(height * scale));
+  canvas.width = Math.max(
+    1,
+    Math.round(width * scale)
+  );
+
+  canvas.height = Math.max(
+    1,
+    Math.round(height * scale)
+  );
 
   const context = canvas.getContext('2d');
 
@@ -329,7 +358,7 @@ async function encodeJPEG(source, width, height) {
     );
 
     if (!dataURL.startsWith('data:image/jpeg;base64,')) {
-      throw new Error('تعذر تحويل الصورة إلى JPEG.');
+      throw new Error('فشل تحويل الصورة إلى JPEG.');
     }
 
     const base64 = dataURL.split(',')[1];
@@ -350,9 +379,8 @@ async function encodeJPEG(source, width, height) {
   );
 }
 
-
-/**
- * Set photo preview and form values.
+/*
+ * Prepare image for upload.
  */
 function setPhoto(dataURL, source) {
   $('imageData').value = dataURL;
@@ -369,106 +397,95 @@ function setPhoto(dataURL, source) {
     'تم تجهيز الصورة بنجاح. يمكنك إرسال الاستمارة.';
 }
 
-
-/**
- * Open camera using browser media API.
+/*
+ * Open live camera.
  */
-$('startCamera').addEventListener(
-  'click',
-  async () => {
-    if (busy) return;
+$('startCamera').addEventListener('click', async () => {
+  if (busy) return;
+
+  stopCamera();
+
+  try {
+    if (!navigator.mediaDevices?.getUserMedia) {
+      throw new Error(
+        'المتصفح لا يدعم تشغيل الكاميرا.'
+      );
+    }
+
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: {
+          ideal: 'environment'
+        }
+      },
+      audio: false
+    });
+
+    video.srcObject = stream;
+
+    $('cameraArea').style.display = 'block';
+
+    await video.play();
+
+    message.textContent =
+      'الكاميرا تعمل. اضغط التقاط الآن.';
+
+  } catch (error) {
+    stopCamera();
+
+    message.textContent =
+      'تعذر تشغيل الكاميرا: ' + error.message;
+  }
+});
+
+/*
+ * Capture photo.
+ */
+$('capture').addEventListener('click', async () => {
+  if (!stream || !video.videoWidth || busy) {
+    return;
+  }
+
+  busy = true;
+
+  try {
+    const dataURL = await encodeJPEG(
+      video,
+      video.videoWidth,
+      video.videoHeight
+    );
+
+    setPhoto(dataURL, 'camera');
 
     stopCamera();
 
-    try {
-      if (!navigator.mediaDevices?.getUserMedia) {
-        throw new Error(
-          'المتصفح لا يدعم تشغيل الكاميرا.'
-        );
-      }
+  } catch (error) {
+    message.textContent = error.message;
 
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: { ideal: 'environment' }
-        },
-        audio: false
-      });
-
-      video.srcObject = stream;
-      $('cameraArea').style.display = 'block';
-
-      await video.play();
-
-      message.textContent =
-        'الكاميرا تعمل. اضغط التقاط الآن.';
-
-    } catch (error) {
-      stopCamera();
-
-      message.textContent =
-        'تعذر تشغيل الكاميرا: ' + error.message;
-    }
+  } finally {
+    busy = false;
   }
-);
+});
 
-
-/**
- * Capture current camera frame.
- */
-$('capture').addEventListener(
-  'click',
-  async () => {
-    if (!stream || !video.videoWidth || busy) {
-      return;
-    }
-
-    busy = true;
-
-    try {
-      const dataURL = await encodeJPEG(
-        video,
-        video.videoWidth,
-        video.videoHeight
-      );
-
-      setPhoto(dataURL, 'camera');
-      stopCamera();
-
-    } catch (error) {
-      message.textContent = error.message;
-
-    } finally {
-      busy = false;
-    }
-  }
-);
-
-
-/**
- * Close camera manually.
+/*
+ * Close camera.
  */
 $('stopCamera').addEventListener(
   'click',
   stopCamera
 );
 
-
-/**
- * Open file chooser.
+/*
+ * Choose image from device.
  */
-$('chooseFile').addEventListener(
-  'click',
-  () => {
-    if (!busy) $('filePicker').click();
+$('chooseFile').addEventListener('click', () => {
+  if (!busy) {
+    $('filePicker').click();
   }
-);
+});
 
-
-/**
- * Handle device photo upload.
- *
- * Uses Image element instead of createImageBitmap
- * for broader Safari compatibility.
+/*
+ * Process uploaded image.
  */
 $('filePicker').addEventListener(
   'change',
@@ -491,6 +508,7 @@ $('filePicker').addEventListener(
 
       await new Promise((resolve, reject) => {
         img.onload = resolve;
+
         img.onerror = () => reject(
           new Error('تعذر فتح الصورة.')
         );
@@ -512,18 +530,16 @@ $('filePicker').addEventListener(
 
     } finally {
       URL.revokeObjectURL(url);
+
       event.target.value = '';
+
       busy = false;
     }
   }
 );
 
-
-/**
- * Validate before native POST.
- *
- * Browser opens the server result in a new tab.
- * Do not show a false "saved" message locally.
+/*
+ * Submit to Google Apps Script.
  */
 form.addEventListener('submit', event => {
   const validURL =
@@ -534,7 +550,8 @@ form.addEventListener('submit', event => {
     event.preventDefault();
 
     message.textContent =
-      'يجب ضبط رابط Google Apps Script أولاً.';
+      'رابط Google Apps Script غير صحيح.';
+
     return;
   }
 
@@ -543,25 +560,31 @@ form.addEventListener('submit', event => {
 
     message.textContent =
       'يرجى تجهيز الصورة قبل الإرسال.';
+
     return;
   }
 
   if (!form.checkValidity()) {
     event.preventDefault();
+
     form.reportValidity();
     return;
   }
 
-  // Native cross-origin HTML form submission.
   form.action = SCRIPT_URL;
 
   message.textContent =
-    'يجري فتح نتيجة الإرسال في تبويب جديد. ' +
-    'تأكد من ظهور رسالة الحفظ قبل إعادة الإرسال.';
+    'سيُفتح تبويب جديد يعرض نتيجة الحفظ. ' +
+    'تأكد من نجاح العملية قبل إعادة الإرسال.';
 });
 
-
-window.addEventListener('pagehide', stopCamera);
+/*
+ * Release camera resources.
+ */
+window.addEventListener(
+  'pagehide',
+  stopCamera
+);
 </script>
 </body>
 </html>
