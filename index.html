@@ -5,11 +5,288 @@
   <meta charset="UTF-8">
   <meta name="viewport"
         content="width=device-width, initial-scale=1">
-  <title>Camera Registration Form</title>
+  <title>استمارة تسجيل البيانات</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px 14px;
+      font-family: Arial, sans-serif;
+      background: #f3f6f5;
+      color: #22302b;
+    }
+
+    .container {
+      max-width: 520px;
+      margin: 30px auto;
+      background: white;
+      padding: 28px;
+      border-radius: 16px;
+      box-shadow: 0 6px 30px #0000000c;
+    }
+
+    h2 { text-align: center; }
+
+    label {
+      display: block;
+      margin: 18px 0 8px;
+      font-weight: bold;
+    }
+
+    input[type="text"], input[type="tel"] {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #cbd5d1;
+      border-radius: 9px;
+      font-size: 16px;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    button {
+      padding: 14px;
+      border: 0;
+      border-radius: 9px;
+      font-size: 15px;
+      cursor: pointer;
+      background: #176747;
+      color: white;
+    }
+
+    button.secondary {
+      background: #e8f2ec;
+      color: #176747;
+      border: 1px solid #b5d8c3;
+    }
+
+    button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    #cameraPanel {
+      display: none;
+      margin-top: 18px;
+    }
+
+    video, #preview {
+      display: block;
+      width: 100%;
+      max-height: 360px;
+      object-fit: contain;
+      border-radius: 12px;
+      background: #edf0ee;
+    }
+
+    #preview { display: none; margin-top: 18px; }
+
+    .cameraControls {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .cameraControls button { flex: 1; }
+
+    #status {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: #687770;
+      line-height: 1.7;
+    }
+  </style>
 </head>
-<body style="font-family:Arial;text-align:center;padding:40px">
-  <h2>استمارة التسجيل</h2>
-  <p>تم تشغيل الموقع بنجاح.</p>
-  <p>الخطوة التالية: إضافة الكاميرا والاستمارة.</p>
+
+<body>
+<main class="container">
+  <h2>استمارة تسجيل البيانات</h2>
+
+  <form id="registrationForm">
+    <label for="name">الاسم الكامل</label>
+    <input id="name" type="text"
+           maxlength="150" required>
+
+    <label for="phone">رقم الهاتف</label>
+    <input id="phone" type="tel" required>
+
+    <label>الصورة</label>
+
+    <div class="actions">
+      <button type="button" id="openCamera">
+        📷 التقاط صورة
+      </button>
+
+      <button type="button" class="secondary"
+              id="chooseFile">
+        📁 تحميل صورة
+      </button>
+    </div>
+
+    <input type="file" id="fileInput"
+           accept="image/*" hidden>
+
+    <section id="cameraPanel">
+      <video id="video" autoplay playsinline muted></video>
+
+      <div class="cameraControls">
+        <button type="button" id="capturePhoto">
+          التقاط الآن
+        </button>
+        <button type="button" id="closeCamera"
+                class="secondary">
+          إغلاق الكاميرا
+        </button>
+      </div>
+    </section>
+
+    <img id="preview" alt="معاينة الصورة">
+
+    <p class="hint">
+      اختر التقاط صورة جديدة أو تحميل صورة محفوظة.
+      ستظهر معاينة الصورة قبل الإرسال.
+    </p>
+
+    <button type="submit" style="width:100%">
+      إرسال الاستمارة
+    </button>
+
+    <p id="status" role="status"></p>
+  </form>
+</main>
+
+<script>
+  const $ = id => document.getElementById(id);
+
+  const video = $('video');
+  const panel = $('cameraPanel');
+  const preview = $('preview');
+  const status = $('status');
+
+  let stream = null;
+  let imageBlob = null;
+
+  function stopCamera() {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      stream = null;
+    }
+
+    video.srcObject = null;
+    panel.style.display = 'none';
+  }
+
+  $('openCamera').addEventListener('click', async () => {
+    stopCamera();
+
+    try {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        throw new Error(
+          'المتصفح لا يدعم تشغيل الكاميرا.'
+        );
+      }
+
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: 'environment' }
+        },
+        audio: false
+      });
+
+      video.srcObject = stream;
+      panel.style.display = 'block';
+
+      await video.play();
+      status.textContent = 'الكاميرا جاهزة للتصوير.';
+
+    } catch (error) {
+      stopCamera();
+
+      status.textContent =
+        'تعذر تشغيل الكاميرا: ' + error.message;
+    }
+  });
+
+  $('capturePhoto').addEventListener('click', async () => {
+    if (!stream || !video.videoWidth) return;
+
+    const canvas = document.createElement('canvas');
+    const scale = Math.min(
+      1,
+      1600 / Math.max(video.videoWidth, video.videoHeight)
+    );
+
+    canvas.width = Math.round(video.videoWidth * scale);
+    canvas.height = Math.round(video.videoHeight * scale);
+
+    canvas.getContext('2d').drawImage(
+      video, 0, 0, canvas.width, canvas.height
+    );
+
+    canvas.toBlob(blob => {
+      if (!blob) {
+        status.textContent = 'فشل التقاط الصورة.';
+        return;
+      }
+
+      imageBlob = blob;
+      preview.src = URL.createObjectURL(blob);
+      preview.style.display = 'block';
+
+      stopCamera();
+      status.textContent = 'تم التقاط الصورة بنجاح.';
+
+    }, 'image/jpeg', 0.85);
+  });
+
+  $('closeCamera').addEventListener('click', stopCamera);
+
+  $('chooseFile').addEventListener('click', () => {
+    $('fileInput').click();
+  });
+
+  $('fileInput').addEventListener('change', event => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      status.textContent = 'يجب اختيار صورة.';
+      return;
+    }
+
+    stopCamera();
+    imageBlob = file;
+
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = 'block';
+
+    status.textContent = 'تم اختيار الصورة بنجاح.';
+  });
+
+  $('registrationForm').addEventListener('submit', e => {
+    e.preventDefault();
+
+    if (!imageBlob) {
+      status.textContent = 'يرجى إضافة صورة أولاً.';
+      return;
+    }
+
+    status.textContent =
+      'نجح الاختبار المحلي. ربط حفظ البيانات هو الخطوة التالية.';
+  });
+
+  window.addEventListener('pagehide', stopCamera);
+</script>
 </body>
 </html>
