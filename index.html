@@ -1,1197 +1,252 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1">
-
-<title>استمارة البيانات الشخصية</title>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>استمارة تسجيل البيانات الشخصية</title>
 <style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  padding: 20px 12px;
-  font-family: Arial, sans-serif;
-  background: #f3f6f5;
-  color: #24342d;
-}
-
-main {
-  max-width: 680px;
-  margin: 20px auto;
-  padding: 30px;
-  background: #fff;
-  border-radius: 17px;
-  box-shadow: 0 5px 28px #0000000d;
-}
-
-h1 {
-  margin: 0 0 10px;
-  text-align: center;
-  font-size: 25px;
-}
-
-.subtitle {
-  color: #65766c;
-  text-align: center;
-  line-height: 1.8;
-  margin-bottom: 25px;
-}
-
-h2 {
-  font-size: 18px;
-  color: #176747;
-  margin: 27px 0 16px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e4ebe7;
-}
-
-label {
-  display: block;
-  font-weight: bold;
-  margin: 14px 0 7px;
-}
-
-input:not([type="file"]):not([type="hidden"]),
-select,
-textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #c5d2cb;
-  border-radius: 9px;
-  font: inherit;
-  background: white;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  outline: 2px solid #91c5a8;
-  outline-offset: 1px;
-}
-
-textarea {
-  resize: vertical;
-  min-height: 90px;
-}
-
-button {
-  border: 0;
-  border-radius: 9px;
-  padding: 12px;
-  background: #176747;
-  color: #fff;
-  font: inherit;
-  cursor: pointer;
-}
-
-button.secondary {
-  background: #e7f1eb;
-  color: #176747;
-  border: 1px solid #b1d7c2;
-}
-
-button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
-.photo-box {
-  padding: 16px;
-  margin: 16px 0;
-  border: 1px solid #d4e2d9;
-  border-radius: 12px;
-  background: #fafcfb;
-}
-
-.photo-title {
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-#cameraPanel {
-  display: none;
-  margin: 18px 0;
-  padding: 16px;
-  border: 1px solid #b1d7c2;
-  border-radius: 12px;
-  background: #f1f8f3;
-}
-
-#video {
-  display: block;
-  width: 100%;
-  max-height: 400px;
-  object-fit: contain;
-  background: #222;
-  border-radius: 10px;
-}
-
-.camera-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.preview {
-  display: none;
-  width: 100%;
-  max-height: 280px;
-  object-fit: contain;
-  margin-top: 12px;
-  border-radius: 10px;
-  background: #e9efeb;
-}
-
-.photo-status {
-  font-size: 13px;
-  color: #176747;
-  margin-top: 10px;
-  min-height: 18px;
-}
-
-#send {
-  width: 100%;
-  padding: 15px;
-  margin-top: 24px;
-  font-weight: bold;
-}
-
-#status {
-  margin-top: 16px;
-  text-align: center;
-  line-height: 1.8;
-  overflow-wrap: anywhere;
-}
-
-.hint {
-  color: #68786e;
-  font-size: 13px;
-  line-height: 1.8;
-}
-
-.required {
-  color: #b42318;
-}
-
-.trap {
-  position: absolute;
-  left: -9999px;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}
-
-@media (max-width: 520px) {
-  main {
-    padding: 20px;
-  }
-
-  .grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 370px) {
-  .actions,
-  .camera-actions {
-    grid-template-columns: 1fr;
-  }
-}
+:root{font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;color:#22382f;background:#f4f7f5}
+*{box-sizing:border-box}body{margin:0;padding:22px 12px}
+main{max-width:740px;margin:auto;background:#fff;border-radius:20px;box-shadow:0 8px 28px #122f2110;padding:30px}
+h1{text-align:center;font-size:clamp(21px,4vw,28px);margin:0 0 8px}
+.intro{text-align:center;color:#66776c;line-height:1.9;margin:0 0 25px}
+h2{font-size:18px;color:#176747;margin:28px 0 14px;border-bottom:1px solid #dfe8e1;padding-bottom:9px}
+label{display:block;font-weight:600;font-size:14px;margin:14px 0 7px}
+input:not([type=hidden]):not([type=file]),select,textarea{width:100%;min-height:44px;border:1px solid #c8d6cc;border-radius:10px;padding:11px 12px;background:white;font:inherit;font-size:15px}
+textarea{resize:vertical;min-height:95px}input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid #47976a;outline-offset:2px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+button{background:#176747;color:white;border:0;border-radius:10px;padding:12px 14px;font:inherit;font-weight:600;cursor:pointer}
+button.secondary{background:#e8f2eb;color:#176747;border:1px solid #b9d7c4}button:disabled{opacity:.56;cursor:not-allowed}
+.photo{border:1px solid #cfdfd4;border-radius:13px;padding:16px;margin:17px 0;background:#fbfdfb}
+.photo strong{display:block;margin-bottom:10px}.buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.preview{display:none;width:100%;max-height:330px;object-fit:contain;background:#edf2ee;border-radius:9px;margin-top:12px}
+.photo-message{min-height:16px;color:#176747;font-size:13px;margin:9px 0 0}
+#cameraPanel{display:none;padding:15px;margin:18px 0;background:#edf7f0;border:1px solid #b4d9c0;border-radius:14px}
+#cameraPanel video{display:block;width:100%;max-height:440px;background:#1b1b1b;border-radius:10px}
+#cameraPanel h3{margin:0 0 10px;font-size:16px}#cameraPanel .buttons{margin-top:10px}
+#status{min-height:32px;line-height:1.8;text-align:center;margin-top:15px}
+.note{color:#607567;font-size:13px;line-height:1.8}.required{color:#b42318}
+#send{width:100%;padding:15px;margin-top:15px}.trap{position:absolute;left:-10000px;height:1px;width:1px;overflow:hidden}
+@media(max-width:540px){main{padding:19px}.grid{grid-template-columns:1fr}}
+@media(max-width:345px){.buttons{grid-template-columns:1fr}}
 </style>
 </head>
-
 <body>
-
 <main>
-
-<h1>استمارة البيانات الشخصية</h1>
-
-<p class="subtitle">
-  يرجى إدخال المعلومات المطلوبة بدقة،
-  مع التقاط الصور مباشرة بالكاميرا
-  أو اختيار الصور من جهازك.
-</p>
-
-<form
-  id="personForm"
-  method="POST"
-  target="_blank"
-  accept-charset="UTF-8"
->
-
-<!-- PERSONAL INFORMATION -->
-
+<h1>استمارة تسجيل البيانات الشخصية</h1>
+<p class="intro">أكمل الحقول المطلوبة والتقط الصور أو اخترها من الجهاز. بعد نجاح الحفظ ستظهر نسخة PDF قابلة للعرض والتنزيل.</p>
+<form id="personForm" method="post" target="_blank" accept-charset="UTF-8">
 <h2>أولاً: المعلومات الشخصية</h2>
-
-<label for="fullName">
-  الاسم الكامل <span class="required">*</span>
-</label>
-
-<input
-  id="fullName"
-  name="fullName"
-  type="text"
-  maxlength="150"
-  minlength="2"
-  autocomplete="name"
-  required
->
-
+<label for="fullName">الاسم الكامل <span class="required">*</span></label>
+<input id="fullName" name="fullName" type="text" autocomplete="name" minlength="2" maxlength="150" required>
 <div class="grid">
-
-  <div>
-    <label for="birthDate">
-      تاريخ الميلاد <span class="required">*</span>
-    </label>
-
-    <input
-      id="birthDate"
-      name="birthDate"
-      type="date"
-      min="1900-01-01"
-      required
-    >
-  </div>
-
-  <div>
-    <label for="gender">
-      الجنس <span class="required">*</span>
-    </label>
-
-    <select
-      id="gender"
-      name="gender"
-      required
-    >
-      <option value="">اختر الجنس</option>
-      <option value="male">ذكر</option>
-      <option value="female">أنثى</option>
-    </select>
-  </div>
-
+<div><label for="birthDate">تاريخ الميلاد <span class="required">*</span></label><input type="date" id="birthDate" name="birthDate" min="1900-01-01" required></div>
+<div><label for="gender">الجنس <span class="required">*</span></label><select id="gender" name="gender" required><option value="">اختر</option><option value="male">ذكر</option><option value="female">أنثى</option></select></div>
 </div>
-
-<label for="governorate">
-  المحافظة <span class="required">*</span>
-</label>
-
-<select
-  id="governorate"
-  name="governorate"
-  required
->
-  <option value="">اختر المحافظة</option>
-  <option value="بغداد">بغداد</option>
-  <option value="البصرة">البصرة</option>
-  <option value="نينوى">نينوى</option>
-  <option value="الأنبار">الأنبار</option>
-  <option value="كربلاء">كربلاء</option>
-  <option value="النجف">النجف</option>
-  <option value="بابل">بابل</option>
-  <option value="القادسية">القادسية</option>
-  <option value="المثنى">المثنى</option>
-  <option value="ذي قار">ذي قار</option>
-  <option value="ميسان">ميسان</option>
-  <option value="واسط">واسط</option>
-  <option value="ديالى">ديالى</option>
-  <option value="صلاح الدين">صلاح الدين</option>
-  <option value="كركوك">كركوك</option>
-  <option value="أربيل">أربيل</option>
-  <option value="السليمانية">السليمانية</option>
-  <option value="دهوك">دهوك</option>
-  <option value="حلبجة">حلبجة</option>
+<label for="governorate">المحافظة <span class="required">*</span></label>
+<select id="governorate" name="governorate" required><option value="">اختر المحافظة</option>
+<option>بغداد</option><option>البصرة</option><option>نينوى</option><option>الأنبار</option><option>كربلاء</option><option>النجف</option><option>بابل</option><option>القادسية</option><option>المثنى</option><option>ذي قار</option><option>ميسان</option><option>واسط</option><option>ديالى</option><option>صلاح الدين</option><option>كركوك</option><option>أربيل</option><option>السليمانية</option><option>دهوك</option><option>حلبجة</option>
 </select>
-
-<label for="address">
-  عنوان السكن <span class="required">*</span>
-</label>
-
-<textarea
-  id="address"
-  name="address"
-  minlength="5"
-  maxlength="500"
-  required
-  placeholder="المحافظة، القضاء، الناحية، المحلة، الزقاق"
-></textarea>
-
-
-<!-- CONTACT INFORMATION -->
-
+<label for="address">عنوان السكن <span class="required">*</span></label>
+<textarea id="address" name="address" minlength="5" maxlength="500" required placeholder="المحافظة، القضاء، المحلة، الزقاق"></textarea>
 <h2>ثانياً: معلومات الاتصال</h2>
-
-<label for="phone">
-  رقم الهاتف <span class="required">*</span>
-</label>
-
-<input
-  id="phone"
-  name="phone"
-  type="tel"
-  maxlength="30"
-  autocomplete="tel"
-  inputmode="tel"
-  placeholder="07XXXXXXXXX"
-  required
->
-
-<label for="email">
-  البريد الإلكتروني
-</label>
-
-<input
-  id="email"
-  name="email"
-  type="email"
-  maxlength="254"
-  autocomplete="email"
-  placeholder="example@gmail.com"
->
-
-
-<!-- PHOTOS -->
-
-<h2>ثالثاً: الصور والمرفقات</h2>
-
-<section class="photo-box">
-
-  <div class="photo-title">
-    الصورة الشخصية <span class="required">*</span>
-  </div>
-
-  <div class="actions">
-
-    <button
-      type="button"
-      data-camera="personal"
-    >
-      📷 التقاط صورة
-    </button>
-
-    <button
-      type="button"
-      class="secondary"
-      data-upload="personal"
-    >
-      📁 تحميل صورة
-    </button>
-
-  </div>
-
-  <img
-    id="personalPreview"
-    class="preview"
-    alt="معاينة الصورة الشخصية"
-  >
-
-  <p
-    id="personalStatus"
-    class="photo-status"
-  ></p>
-
+<label for="phone">رقم الهاتف <span class="required">*</span></label>
+<input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="30" placeholder="07801234567" required>
+<label for="email">البريد الإلكتروني (اختياري)</label>
+<input id="email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="name@example.com">
+<h2>ثالثاً: الصور</h2>
+<section class="photo">
+<strong>الصورة الشخصية <span class="required">*</span></strong>
+<div class="buttons"><button type="button" data-camera="personal">📷 التقاط صورة</button><button type="button" class="secondary" data-upload="personal">📁 تحميل صورة</button></div>
+<img class="preview" id="personalPreview" alt="معاينة الصورة الشخصية"><p class="photo-message" id="personalStatus"></p>
 </section>
-
-
-<section class="photo-box">
-
-  <div class="photo-title">
-    صورة المستمسك (اختياري)
-  </div>
-
-  <div class="actions">
-
-    <button
-      type="button"
-      data-camera="document"
-    >
-      📷 التقاط صورة
-    </button>
-
-    <button
-      type="button"
-      class="secondary"
-      data-upload="document"
-    >
-      📁 تحميل صورة
-    </button>
-
-  </div>
-
-  <img
-    id="documentPreview"
-    class="preview"
-    alt="معاينة صورة المستمسك"
-  >
-
-  <p
-    id="documentStatus"
-    class="photo-status"
-  ></p>
-
+<section class="photo">
+<strong>صورة المستمسك (اختيارية)</strong>
+<div class="buttons"><button type="button" data-camera="document">📷 التقاط صورة</button><button type="button" class="secondary" data-upload="document">📁 تحميل صورة</button></div>
+<img class="preview" id="documentPreview" alt="معاينة صورة المستمسك"><p class="photo-message" id="documentStatus"></p>
 </section>
-
-
-<!-- SHARED LIVE CAMERA -->
-
-<section id="cameraPanel">
-
-  <div
-    id="cameraTitle"
-    class="photo-title"
-  >
-    الكاميرا
-  </div>
-
-  <video
-    id="video"
-    autoplay
-    playsinline
-    muted
-  ></video>
-
-  <div class="camera-actions">
-
-    <button
-      type="button"
-      id="capture"
-    >
-      التقاط الآن
-    </button>
-
-    <button
-      type="button"
-      id="closeCamera"
-      class="secondary"
-    >
-      إغلاق الكاميرا
-    </button>
-
-  </div>
-
-</section>
-
-
-<!-- FILE INPUTS -->
-
-<input
-  type="file"
-  id="personalFile"
-  accept="image/*"
-  hidden
->
-
-<input
-  type="file"
-  id="documentFile"
-  accept="image/*"
-  hidden
->
-
-
-<!-- BACKEND IMAGE FIELDS -->
-
-<input
-  type="hidden"
-  id="personalImage"
-  name="personalImage"
->
-
-<input
-  type="hidden"
-  id="personalPhotoSource"
-  name="personalPhotoSource"
->
-
-<input
-  type="hidden"
-  id="documentImage"
-  name="documentImage"
->
-
-<input
-  type="hidden"
-  id="documentPhotoSource"
-  name="documentPhotoSource"
->
-
-<input
-  type="hidden"
-  id="requestId"
-  name="requestId"
->
-
-
-<!-- HONEYPOT -->
-
-<div class="trap" aria-hidden="true">
-  <label for="website">
-    اترك هذا الحقل فارغاً
-  </label>
-
-  <input
-    id="website"
-    name="website"
-    type="text"
-    tabindex="-1"
-    autocomplete="off"
-  >
+<section id="cameraPanel" aria-label="إعدادات الكاميرا">
+<h3 id="cameraTitle">الكاميرا</h3>
+<div class="grid">
+<div><label for="facing">اتجاه الكاميرا</label><select id="facing"><option value="user">الأمامية</option><option value="environment">الخلفية</option></select></div>
+<div><label for="cameraDevice">الكاميرا المتاحة</label><select id="cameraDevice"><option value="">اختيار تلقائي</option></select></div>
 </div>
-
-
-<!-- NOTES -->
-
+<p class="note">على الأجهزة التي تحتوي على كاميرا واحدة قد لا يتغير المشهد. اختيار كاميرا محددة يتجاوز خيار الأمامية/الخلفية.</p>
+<video id="video" autoplay playsinline muted></video>
+<div class="buttons"><button type="button" id="capture">التقاط الآن</button><button type="button" id="switchCamera" class="secondary">🔄 تبديل الكاميرا</button></div>
+<div class="buttons"><button type="button" id="closeCamera" class="secondary">إغلاق الكاميرا</button><button type="button" id="refreshCameras" class="secondary">تحديث قائمة الكاميرات</button></div>
+</section>
+<input id="personalFile" type="file" accept="image/*" hidden>
+<input id="documentFile" type="file" accept="image/*" hidden>
+<input id="personalImage" name="personalImage" type="hidden">
+<input id="personalPhotoSource" name="personalPhotoSource" type="hidden">
+<input id="documentImage" name="documentImage" type="hidden">
+<input id="documentPhotoSource" name="documentPhotoSource" type="hidden">
+<input id="requestId" name="requestId" type="hidden">
+<div class="trap" aria-hidden="true"><label for="website">اتركه فارغاً</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
 <h2>رابعاً: الملاحظات</h2>
-
-<label for="notes">
-  ملاحظات إضافية
-</label>
-
-<textarea
-  id="notes"
-  name="notes"
-  maxlength="2000"
-  placeholder="يمكنك كتابة أي معلومات إضافية"
-></textarea>
-
-
-<!-- PRIVACY NOTICE -->
-
-<p class="hint">
-  ستُرسل البيانات والصور إلى حساب Google
-  التابع للجهة المسؤولة عن هذه الاستمارة.
-  لا تقدم معلومات أو مستمسكات حساسة
-  إلا عند الحاجة إليها وبعد التأكد من الجهة المستلمة.
-</p>
-
-
-<button
-  type="submit"
-  id="send"
->
-  إرسال الاستمارة
-</button>
-
-<p
-  id="status"
-  role="status"
-  aria-live="polite"
-></p>
-
+<label for="notes">ملاحظات إضافية</label><textarea id="notes" name="notes" maxlength="2000"></textarea>
+<p class="note">تُخزن المعلومات والصور وملف PDF في حساب Google للجهة المستلمة. لا ترفع مستمسكاً حقيقياً إلا بعد التأكد من ضرورة جمعه وسياسة الخصوصية.</p>
+<button id="send" type="submit">حفظ التسجيل وإنشاء PDF</button>
+<p id="status" role="status" aria-live="polite"></p>
 </form>
-
 </main>
-
-
 <script>
 'use strict';
-
-/*
- * GOOGLE APPS SCRIPT ENDPOINT
- */
-const SCRIPT_URL =
-  'https://script.google.com/macros/s/AKfycbxBJs0Y6ukHgicPMXOOqXf2_R3LC7jbSAewhPFilK8vU-H79r5MzHimu5jDv2Hio2mRyA/exec';
-
-/*
- * Must match Code.gs maxImageBytes.
- */
-const MAX_IMAGE_BYTES = 900 * 1024;
-
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxBJs0Y6ukHgicPMXOOqXf2_R3LC7jbSAewhPFilK8vU-H79r5MzHimu5jDv2Hio2mRyA/exec';
+const MAX_IMAGE_BYTES = 700 * 1024;
 const MAX_POST_BYTES = 3 * 1024 * 1024;
-
 const $ = id => document.getElementById(id);
-
-const form = $('personForm');
-const video = $('video');
-const status = $('status');
-
-let stream = null;
-let cameraTarget = null;
-let cameraBusy = false;
-let processing = false;
-let cameraSession = 0;
-let submitted = false;
-
-const photos = {
-  personal: null,
-  document: null
-};
-
-/*
- * One UUID shared by all fields and photos.
- */
+const form = $('personForm'), video = $('video'), status = $('status');
+const photos = {personal:null, document:null};
+let stream = null, cameraTarget = null, cameraBusy = false, processing = false, generation = 0, submitted = false;
+let availableCameras = [];
 $('requestId').value = crypto.randomUUID();
-
-/*
- * Limit the date field to today.
- */
 const today = new Date();
-
-const localDate = [
-  today.getFullYear(),
-  String(today.getMonth() + 1).padStart(2, '0'),
-  String(today.getDate()).padStart(2, '0')
-].join('-');
-
-$('birthDate').max = localDate;
-
-
-/*
- * Release the camera.
- */
-function stopCamera() {
-  cameraSession++;
-
-  if (stream) {
-    stream.getTracks().forEach(track => track.stop());
-  }
-
-  stream = null;
-  cameraTarget = null;
-
-  video.srcObject = null;
-
-  $('cameraPanel').style.display = 'none';
+$('birthDate').max = [today.getFullYear(),String(today.getMonth()+1).padStart(2,'0'),String(today.getDate()).padStart(2,'0')].join('-');
+function message(s){status.textContent=s;}
+function stopCamera(){
+  generation++;
+  if(stream) stream.getTracks().forEach(t=>t.stop());
+  stream=null;cameraTarget=null;video.srcObject=null;
+  $('cameraPanel').style.display='none';
 }
-
-
-/*
- * Control editing after sending.
- */
-function setSubmittedState(value) {
-  submitted = value;
-
-  $('send').disabled = value;
-
-  if (value) {
-    status.textContent =
-      'تم فتح صفحة نتيجة الإرسال. ' +
-      'تحقق من نجاح الحفظ قبل إعادة إرسال البيانات.';
-  }
-}
-
-
-/*
- * Convert camera or uploaded image to JPEG.
- *
- * Returns a compressed Base64 Data URL.
- */
-function encodeJPEG(source, width, height) {
-  if (!width || !height) {
-    throw new Error(
-      'أبعاد الصورة غير صالحة.'
-    );
-  }
-
-  const canvas = document.createElement('canvas');
-
-  const scale = Math.min(
-    1,
-    1280 / Math.max(width, height)
-  );
-
-  canvas.width = Math.max(
-    1,
-    Math.round(width * scale)
-  );
-
-  canvas.height = Math.max(
-    1,
-    Math.round(height * scale)
-  );
-
-  const ctx = canvas.getContext('2d');
-
-  if (!ctx) {
-    throw new Error(
-      'تعذرت معالجة الصورة.'
-    );
-  }
-
-  ctx.drawImage(
-    source,
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
-
-  const qualities = [
-    0.78,
-    0.65,
-    0.50,
-    0.38,
-    0.28
-  ];
-
-  for (const quality of qualities) {
-    const dataURL = canvas.toDataURL(
-      'image/jpeg',
-      quality
-    );
-
-    if (
-      !dataURL.startsWith(
-        'data:image/jpeg;base64,'
-      )
-    ) {
-      throw new Error(
-        'تعذر تحويل الصورة إلى JPEG.'
-      );
-    }
-
-    const base64 = dataURL.split(',')[1];
-
-    const size = Math.floor(
-      base64.length * 3 / 4
-    );
-
-    if (size <= MAX_IMAGE_BYTES) {
-      return dataURL;
+function encodeJPEG(source,width,height){
+  if(!width||!height)throw Error('أبعاد الصورة غير صالحة');
+  for(const maxSide of [1400,1150,950,750]){
+    const scale=Math.min(1,maxSide/Math.max(width,height));
+    const canvas=document.createElement('canvas');
+    canvas.width=Math.max(1,Math.round(width*scale));
+    canvas.height=Math.max(1,Math.round(height*scale));
+    const ctx=canvas.getContext('2d');
+    if(!ctx)throw Error('تعذرت معالجة الصورة');
+    ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(source,0,0,canvas.width,canvas.height);
+    for(const quality of [.78,.64,.5,.38,.28]){
+      const url=canvas.toDataURL('image/jpeg',quality);
+      if(!url.startsWith('data:image/jpeg;base64,'))throw Error('فشل تحويل الصورة');
+      const b64=url.split(',')[1];
+      const padding=b64.endsWith('==')?2:b64.endsWith('=')?1:0;
+      if(b64.length*3/4-padding<=MAX_IMAGE_BYTES)return url;
     }
   }
-
-  throw new Error(
-    'الصورة كبيرة جداً، يرجى اختيار صورة أصغر.'
-  );
+  throw Error('الصورة كبيرة جداً، اختر صورة أصغر');
 }
-
-
-/*
- * Store a photo for one specific field.
- */
-function setPhoto(target, dataURL, source) {
-  if (!['personal', 'document'].includes(target)) {
-    throw new Error('حقل الصورة غير معروف.');
-  }
-
-  photos[target] = {
-    dataURL,
-    source
-  };
-
-  $(target + 'Image').value = dataURL;
-
-  $(target + 'PhotoSource').value = source;
-
-  const preview = $(target + 'Preview');
-
-  preview.src = dataURL;
-  preview.style.display = 'block';
-
-  $(target + 'Status').textContent =
-    source === 'camera'
-      ? 'تم التقاط الصورة بنجاح.'
-      : 'تم تحميل الصورة بنجاح.';
-
-  status.textContent =
-    'الصورة جاهزة للإرسال.';
+function setPhoto(target,url,source){
+  photos[target]={url,source};
+  $(target+'Image').value=url;
+  $(target+'PhotoSource').value=source;
+  const img=$(target+'Preview');img.src=url;img.style.display='block';
+  $(target+'Status').textContent=source==='camera'?'تم التقاط الصورة.':'تم تجهيز الصورة المحمّلة.';
+  message('الصورة جاهزة.');
 }
-
-
-/*
- * Open the live camera.
- *
- * Camera logic remains based on getUserMedia,
- * which already worked on MacBook.
- */
-async function openCamera(target) {
-  if (
-    processing ||
-    cameraBusy ||
-    submitted
-  ) {
-    return;
-  }
-
-  stopCamera();
-
-  const session = cameraSession;
-  cameraBusy = true;
-
-  let newStream = null;
-
-  try {
-    if (!navigator.mediaDevices?.getUserMedia) {
-      throw new Error(
-        'المتصفح لا يدعم تشغيل الكاميرا.'
-      );
-    }
-
-    newStream =
-      await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: {
-            ideal: 'environment'
-          }
-        },
-        audio: false
-      });
-
-    /*
-     * Ignore old permission requests if the
-     * user closed/switched the camera meanwhile.
-     */
-    if (session !== cameraSession) {
-      newStream.getTracks().forEach(
-        track => track.stop()
-      );
-      return;
-    }
-
-    stream = newStream;
-    cameraTarget = target;
-
-    video.srcObject = stream;
-
-    $('cameraTitle').textContent =
-      target === 'personal'
-        ? 'التقاط الصورة الشخصية'
-        : 'التقاط صورة المستمسك';
-
-    $('cameraPanel').style.display = 'block';
-
+async function refreshCameras(){
+  if(!navigator.mediaDevices?.enumerateDevices)return;
+  try{
+    const devices=await navigator.mediaDevices.enumerateDevices();
+    availableCameras=devices.filter(d=>d.kind==='videoinput'&&d.deviceId);
+    const select=$('cameraDevice');
+    const previous=select.value;
+    select.replaceChildren(new Option('اختيار تلقائي',''));
+    availableCameras.forEach((d,i)=>select.add(new Option(d.label||'كاميرا '+(i+1),d.deviceId)));
+    if(availableCameras.some(d=>d.deviceId===previous))select.value=previous;
+  }catch(e){message('تعذر عرض قائمة الكاميرات: '+e.message);}
+}
+async function openCamera(target,deviceId=''){
+  if(processing||cameraBusy||submitted)return;
+  stopCamera();const token=generation;
+  cameraBusy=true;let acquired=null;
+  try{
+    if(!navigator.mediaDevices?.getUserMedia)throw Error('المتصفح لا يدعم الكاميرا أو أن الاتصال غير آمن');
+    const videoSettings=deviceId?{deviceId:{exact:deviceId}}:{facingMode:{ideal:$('facing').value}};
+    acquired=await navigator.mediaDevices.getUserMedia({video:videoSettings,audio:false});
+    if(token!==generation){acquired.getTracks().forEach(t=>t.stop());return;}
+    stream=acquired;cameraTarget=target;video.srcObject=stream;
+    $('cameraTitle').textContent=target==='personal'?'التقاط الصورة الشخصية':'التقاط صورة المستمسك';
+    $('cameraPanel').style.display='block';
     await video.play();
-
-    $('cameraPanel').scrollIntoView({
-      behavior: 'smooth',
-      block: 'center'
-    });
-
-    status.textContent =
-      'الكاميرا تعمل. اضغط التقاط الآن.';
-
-  } catch (error) {
-    if (newStream && newStream !== stream) {
-      newStream.getTracks().forEach(
-        track => track.stop()
-      );
-    }
-
-    if (session === cameraSession) {
-      stopCamera();
-
-      status.textContent =
-        'تعذر تشغيل الكاميرا: ' +
-        error.message;
-    }
-
-  } finally {
-    cameraBusy = false;
+    await refreshCameras();
+    const actualId=stream.getVideoTracks()[0]?.getSettings()?.deviceId;
+    if(actualId&&availableCameras.some(d=>d.deviceId===actualId))$('cameraDevice').value=actualId;
+    message('الكاميرا تعمل، يمكنك التقاط الصورة أو تبديل الكاميرا.');
+  }catch(e){
+    if(acquired&&acquired!==stream)acquired.getTracks().forEach(t=>t.stop());
+    if(token===generation){stopCamera();message('تعذر تشغيل الكاميرا: '+e.message);}
+  }finally{cameraBusy=false;}
+}
+async function restartCamera(deviceId=''){
+  if(!cameraTarget||cameraBusy||processing||submitted)return;
+  const target=cameraTarget;
+  await openCamera(target,deviceId);
+}
+document.querySelectorAll('[data-camera]').forEach(b=>b.addEventListener('click',()=>{
+  $('facing').value=b.dataset.camera==='personal'?'user':'environment';
+  $('cameraDevice').value='';
+  openCamera(b.dataset.camera);
+}));
+$('facing').addEventListener('change',()=>{
+  $('cameraDevice').value='';restartCamera();
+});
+$('cameraDevice').addEventListener('change',e=>restartCamera(e.target.value));
+$('switchCamera').addEventListener('click',()=>{
+  if(cameraBusy||!cameraTarget)return;
+  // On multiple-camera systems, cycle through physical cameras.
+  const ids=availableCameras.map(d=>d.deviceId);
+  if(ids.length>1){
+    const current=stream?.getVideoTracks()[0]?.getSettings()?.deviceId||$('cameraDevice').value;
+    const at=ids.indexOf(current);
+    const next=ids[(at+1+ids.length)%ids.length];
+    $('cameraDevice').value=next;restartCamera(next);
+  }else{
+    $('facing').value=$('facing').value==='user'?'environment':'user';
+    $('cameraDevice').value='';restartCamera();
+  }
+});
+$('refreshCameras').addEventListener('click',refreshCameras);
+$('closeCamera').addEventListener('click',stopCamera);
+$('capture').addEventListener('click',()=>{
+  if(!stream||!cameraTarget||!video.videoWidth||processing||cameraBusy||submitted)return;
+  processing=true;
+  try{const target=cameraTarget;setPhoto(target,encodeJPEG(video,video.videoWidth,video.videoHeight),'camera');stopCamera();}
+  catch(e){message(e.message);}finally{processing=false;}
+});
+document.querySelectorAll('[data-upload]').forEach(b=>b.addEventListener('click',()=>{
+  if(!processing&&!cameraBusy&&!submitted)$(b.dataset.upload+'File').click();
+}));
+async function processFile(target,file){
+  if(!file||processing||submitted)return;
+  processing=true;stopCamera();let objectUrl=null;
+  try{
+    if(!file.type.startsWith('image/'))throw Error('اختر صورة فقط');
+    if(file.size>20*1024*1024)throw Error('الصورة الأصلية أكبر من 20MB');
+    objectUrl=URL.createObjectURL(file);const img=new Image();
+    await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(Error('تعذرت قراءة الصورة. جرّب JPEG أو PNG'));img.src=objectUrl;});
+    setPhoto(target,encodeJPEG(img,img.naturalWidth,img.naturalHeight),'upload');
+  }catch(e){message(e.message);}finally{
+    if(objectUrl)URL.revokeObjectURL(objectUrl);
+    $(target+'File').value='';processing=false;
   }
 }
-
-
-/*
- * Capture photo from live video.
- */
-$('capture').addEventListener(
-  'click',
-  () => {
-    if (
-      !stream ||
-      !cameraTarget ||
-      !video.videoWidth ||
-      processing ||
-      submitted
-    ) {
-      return;
-    }
-
-    processing = true;
-
-    try {
-      const target = cameraTarget;
-
-      const dataURL = encodeJPEG(
-        video,
-        video.videoWidth,
-        video.videoHeight
-      );
-
-      setPhoto(
-        target,
-        dataURL,
-        'camera'
-      );
-
-      stopCamera();
-
-    } catch (error) {
-      status.textContent = error.message;
-
-    } finally {
-      processing = false;
-    }
-  }
-);
-
-
-/*
- * Close camera.
- */
-$('closeCamera').addEventListener(
-  'click',
-  stopCamera
-);
-
-
-/*
- * Attach camera buttons to their fields.
- */
-document.querySelectorAll('[data-camera]')
-  .forEach(button => {
-
-    button.addEventListener(
-      'click',
-      () => {
-        openCamera(
-          button.dataset.camera
-        );
-      }
-    );
-
-  });
-
-
-/*
- * Attach upload buttons to their fields.
- */
-document.querySelectorAll('[data-upload]')
-  .forEach(button => {
-
-    button.addEventListener(
-      'click',
-      () => {
-        if (processing || cameraBusy || submitted) {
-          return;
-        }
-
-        const target = button.dataset.upload;
-
-        $(target + 'File').click();
-      }
-    );
-
-  });
-
-
-/*
- * Process uploaded device image.
- */
-async function processFile(target, file) {
-  if (!file || processing || submitted) {
-    return;
-  }
-
-  processing = true;
-  stopCamera();
-
-  let objectURL = null;
-
-  try {
-    if (!file.type.startsWith('image/')) {
-      throw new Error(
-        'يرجى اختيار صورة فقط.'
-      );
-    }
-
-    objectURL = URL.createObjectURL(file);
-
-    const img = new Image();
-
-    await new Promise((resolve, reject) => {
-      img.onload = resolve;
-
-      img.onerror = () => reject(
-        new Error(
-          'تعذر قراءة الصورة. جرّب صيغة JPEG أو PNG.'
-        )
-      );
-
-      img.src = objectURL;
-    });
-
-    const dataURL = encodeJPEG(
-      img,
-      img.naturalWidth,
-      img.naturalHeight
-    );
-
-    setPhoto(
-      target,
-      dataURL,
-      'upload'
-    );
-
-  } catch (error) {
-    status.textContent =
-      'تعذرت معالجة الصورة: ' +
-      error.message;
-
-  } finally {
-    if (objectURL) {
-      URL.revokeObjectURL(objectURL);
-    }
-
-    $(target + 'File').value = '';
-
-    processing = false;
-  }
+$('personalFile').addEventListener('change',e=>processFile('personal',e.target.files?.[0]));
+$('documentFile').addEventListener('change',e=>processFile('document',e.target.files?.[0]));
+function requestSize(){
+  const data=new URLSearchParams();new FormData(form).forEach((v,k)=>data.append(k,String(v)));
+  return new TextEncoder().encode(data.toString()).length;
 }
-
-
-/*
- * File picker handlers.
- */
-$('personalFile').addEventListener(
-  'change',
-  event => {
-    processFile(
-      'personal',
-      event.target.files?.[0]
-    );
+form.addEventListener('submit',e=>{
+  if(!/^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(SCRIPT_URL)){
+    e.preventDefault();return message('رابط الخادم غير صحيح');
   }
-);
-
-$('documentFile').addEventListener(
-  'change',
-  event => {
-    processFile(
-      'document',
-      event.target.files?.[0]
-    );
-  }
-);
-
-
-/*
- * Estimate native form POST payload.
- *
- * Both images are Base64 strings,
- * which increase request size.
- */
-function estimatedPostSize() {
-  const data = new FormData(form);
-
-  const params = new URLSearchParams();
-
-  for (const [key, value] of data.entries()) {
-    params.append(key, String(value));
-  }
-
-  return new TextEncoder().encode(
-    params.toString()
-  ).length;
-}
-
-
-/*
- * Validate and submit the whole person form.
- */
-form.addEventListener(
-  'submit',
-  event => {
-
-    if (
-      !/^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/
-        .test(SCRIPT_URL)
-    ) {
-      event.preventDefault();
-
-      status.textContent =
-        'رابط Google Apps Script غير صحيح.';
-
-      return;
-    }
-
-    if (processing || cameraBusy || stream) {
-      event.preventDefault();
-
-      status.textContent =
-        'يرجى إنهاء التصوير ومعالجة الصور أولاً.';
-
-      return;
-    }
-
-    if (!photos.personal) {
-      event.preventDefault();
-
-      status.textContent =
-        'الصورة الشخصية مطلوبة. ' +
-        'يرجى التقاطها أو تحميلها.';
-
-      return;
-    }
-
-    if (!form.checkValidity()) {
-      event.preventDefault();
-      form.reportValidity();
-      return;
-    }
-
-    if (submitted) {
-      event.preventDefault();
-
-      status.textContent =
-        'تمت محاولة الإرسال سابقاً. ' +
-        'تحقق من صفحة النتيجة قبل التكرار.';
-
-      return;
-    }
-
-    /*
-     * Prevent requests exceeding backend limit.
-     */
-    if (estimatedPostSize() > MAX_POST_BYTES) {
-      event.preventDefault();
-
-      status.textContent =
-        'حجم الصور والبيانات كبير جداً. ' +
-        'يرجى اختيار صور أصغر.';
-
-      return;
-    }
-
-    /*
-     * Send all fields as one POST request.
-     * Browser displays the Apps Script
-     * response in a new tab.
-     */
-    form.action = SCRIPT_URL;
-
-    setSubmittedState(true);
-  }
-);
-
-
-/*
- * Release camera on page exit.
- */
-window.addEventListener(
-  'pagehide',
-  stopCamera
-);
-
+  if(processing||cameraBusy||stream){e.preventDefault();return message('أغلق الكاميرا وانتظر تجهيز الصور');}
+  if(!photos.personal){e.preventDefault();return message('الصورة الشخصية مطلوبة');}
+  if(!form.checkValidity()){e.preventDefault();form.reportValidity();return;}
+  if(submitted){e.preventDefault();return message('تحقق من تبويب النتيجة قبل تكرار الإرسال');}
+  if(requestSize()>MAX_POST_BYTES){e.preventDefault();return message('حجم الطلب كبير، اختر صوراً أصغر');}
+  form.action=SCRIPT_URL;
+  submitted=true;$('send').disabled=true;
+  message('ستُفتح صفحة نتيجة الحفظ. نجاح الإرسال لا يُؤكد إلا من صفحة الخادم.');
+});
+window.addEventListener('pagehide',stopCamera);
 </script>
-
 </body>
 </html>
