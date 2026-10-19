@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title> — استمارة تسجيل الطالب/ة</title>
+<title>كلية الأسباط الجامعة — استمارة تسجيل الطالب/ة</title>
 <style>
 :root{font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;color:#22382f;background:#f4f7f5}
 *{box-sizing:border-box}body{margin:0;padding:22px 12px}
@@ -33,9 +33,18 @@ button.secondary{background:#e8f2eb;color:#176747;border:1px solid #b9d7c4}butto
 </head>
 <body>
 <main>
-<h1>استمارة تسجيل الطالب/ة</h1>
+<h1>كلية الأسباط الجامعة — استمارة تسجيل الطالب/ة</h1>
 <p class="intro">أكمل البيانات المطلوبة ثم التقط الصور أو حمّلها من الجهاز. بعد تأكيد نجاح الحفظ ستتمكن من تنزيل PDF. يُفضّل فتح هذه الصفحة في Chrome على Android أو Safari على iPhone.</p>
 <form id="personForm" method="post" target="_blank" accept-charset="UTF-8">
+<h2>القسم العلمي</h2>
+<label for="department">اختر القسم العلمي <span class="required">*</span></label>
+<select id="department" name="department" required>
+<option value="">اختر القسم العلمي</option>
+<option value="قسم الهندسة المدنية">قسم الهندسة المدنية</option>
+<option value="قسم الوسائط المتعددة والاعلام الرقمي">قسم الوسائط المتعددة والاعلام الرقمي</option>
+<option value="قسم التحليلات المرضية">قسم التحليلات المرضية</option>
+<option value="قسم ادارة المشاريع">قسم ادارة المشاريع</option>
+</select>
 <h2>البيانات الشخصية</h2><div class="grid"><div><label for="fullName">اسم الطالب/ة الرباعي واللقب <span class="required">*</span></label><input id="fullName" name="fullName" type="text" required maxlength="500"></div><div><label for="motherName">اسم الأم الثلاثي واللقب <span class="required">*</span></label><input id="motherName" name="motherName" type="text" required maxlength="500"></div><div><label for="nationality">القومية</label><input id="nationality" name="nationality" type="text" maxlength="500"></div><div><label for="birthPlace">محل الولادة <span class="required">*</span></label><input id="birthPlace" name="birthPlace" type="text" required maxlength="500"></div><div><label for="birthDate">تاريخ الولادة <span class="required">*</span></label><input id="birthDate" name="birthDate" type="date" required min="1900-01-01" maxlength="500"></div></div>
 <h2>الدراسة الإعدادية</h2><div class="grid"><div><label for="totalBefore">المجموع قبل الإضافات</label><input id="totalBefore" name="totalBefore" type="number" maxlength="500"></div><div><label for="totalAfter">المجموع بعد الإضافات</label><input id="totalAfter" name="totalAfter" type="number" maxlength="500"></div><div><label for="schoolName">اسم المدرسة <span class="required">*</span></label><input id="schoolName" name="schoolName" type="text" required maxlength="500"></div><div><label for="successRound">الدور الذي نجح منه الطالب/ة <span class="required">*</span></label><select id="successRound" name="successRound" required><option value="">اختر</option><option value="الأول">الأول</option><option value="الثاني">الثاني</option><option value="الثالث">الثالث</option><option value="أخرى">أخرى</option></select></div><div><label for="email">البريد الإلكتروني</label><input id="email" name="email" type="email" maxlength="500"></div><div><label for="examNumber">الرقم الامتحاني <span class="required">*</span></label><input id="examNumber" name="examNumber" type="text" required maxlength="500"></div><div><label for="universityNumber">رقم الطالب/ة الجامعي</label><input id="universityNumber" name="universityNumber" type="text" maxlength="500"></div><div><label for="graduationYear">السنة الدراسية للتخرج من الإعدادية <span class="required">*</span></label><input id="graduationYear" name="graduationYear" type="text" inputmode="numeric" dir="ltr" required minlength="9" maxlength="9" pattern="[0-9٠-٩۰-۹]{4}-[0-9٠-٩۰-۹]{4}" placeholder="2025-2026" title="أدخل السنة الدراسية بصيغة 2025-2026"></div>
 <div><label for="admissionYear">السنة الدراسية للقبول <span class="required">*</span></label><input id="admissionYear" name="admissionYear" type="text" inputmode="numeric" required pattern="[0-9]{4}-[0-9]{4}" placeholder="2026-2027" maxlength="9"></div><div><label for="universityCard">هوية الطالب/ة الجامعية</label><input id="universityCard" name="universityCard" type="text" maxlength="500"></div></div>
