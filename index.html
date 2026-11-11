@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
@@ -223,6 +222,7 @@ function stopCamera(){
   generation++;
   if(stream) stream.getTracks().forEach(t=>t.stop());
   stream=null;cameraTarget=null;video.srcObject=null;
+  $('capture').disabled=true;
   $('cameraPanel').style.display='none';
 }
 function encodeJPEG(source,width,height){
@@ -259,39 +259,75 @@ async function refreshCameras(){
   try{
     const devices=await navigator.mediaDevices.enumerateDevices();
     availableCameras=devices.filter(d=>d.kind==='videoinput'&&d.deviceId);
-    const select=$('cameraDevice');
-    const previous=select.value;
+    const select=$('cameraDevice'), previous=select.value;
     select.replaceChildren(new Option('اختيار تلقائي',''));
     availableCameras.forEach((d,i)=>select.add(new Option(d.label||'كاميرا '+(i+1),d.deviceId)));
     if(availableCameras.some(d=>d.deviceId===previous))select.value=previous;
-  }catch(e){message('تعذر عرض قائمة الكاميرات: '+e.message);}
+  }catch(err){console.warn('Camera enumeration:',err);}
+}
+function cameraError_(err){
+  const name=err?.name||'';
+  if(name==='NotAllowedError'||name==='PermissionDeniedError')return 'يجب السماح للموقع باستخدام الكاميرا من إعدادات المتصفح.';
+  if(name==='NotFoundError'||name==='DevicesNotFoundError')return 'لم يتم العثور على كاميرا متاحة.';
+  if(name==='NotReadableError'||name==='TrackStartError')return 'الكاميرا مشغولة في تطبيق آخر. أغلق التطبيقات الأخرى وحاول مجدداً.';
+  if(name==='OverconstrainedError')return 'الكاميرا المحددة غير متاحة. اختر الكاميرا تلقائياً.';
+  return err?.message||'تعذر تشغيل الكاميرا';
 }
 async function openCamera(target,deviceId=''){
   if(processing||cameraBusy||submitted)return;
-  stopCamera();const token=generation;
-  cameraBusy=true;let acquired=null;
+  cameraBusy=true;
+  stopCamera();
+  const token=generation;
+  let acquired=null;
+  const capture=$('capture');capture.disabled=true;
   try{
-    if(!navigator.mediaDevices?.getUserMedia)throw Error('المتصفح لا يدعم الكاميرا أو أن الاتصال غير آمن');
-    const videoSettings=deviceId?{deviceId:{exact:deviceId}}:{facingMode:{ideal:$('facing').value}};
-    acquired=await navigator.mediaDevices.getUserMedia({video:videoSettings,audio:false});
+    if(!window.isSecureContext||!navigator.mediaDevices?.getUserMedia)throw Error('الكاميرا تحتاج HTTPS ومتصفحاً حديثاً');
+    // On phones, facingMode is more reliable than enumerateDevices labels/IDs.
+    const facing=$('facing').value;
+    const videoSettings=deviceId?{deviceId:{exact:deviceId}}:{facingMode:{ideal:facing}};
+    try{
+      acquired=await navigator.mediaDevices.getUserMedia({audio:false,video:videoSettings});
+    }catch(err){
+      if(deviceId&&err?.name==='OverconstrainedError'){
+        $('cameraDevice').value='';
+        acquired=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:facing}}});
+      }else throw err;
+    }
     if(token!==generation){acquired.getTracks().forEach(t=>t.stop());return;}
-    stream=acquired;cameraTarget=target;video.srcObject=stream;
-    $('cameraTitle').textContent=target==='personal'?'التقاط الصورة الشخصية':('التقاط '+(document.querySelector('[data-camera=+target+]')?.closest('section')?.querySelector('strong')?.textContent||'صورة المستمسك'));
+    stream=acquired;
+    cameraTarget=target;
+    video.srcObject=stream;
+    const cameraButton=Array.from(document.querySelectorAll('[data-camera]')).find(b=>b.dataset.camera===target);
+    const label=cameraButton?.closest('section')?.querySelector('strong')?.textContent?.trim()||'المستمسك';
+    $('cameraTitle').textContent=target==='personal'?'التقاط الصورة الشخصية':'التقاط '+label;
     $('cameraPanel').style.display='block';
+    $('cameraPanel').scrollIntoView({behavior:'smooth',block:'center'});
+    // Try playback; some mobile browsers delay metadata until playback starts.
     await video.play();
+    if(token!==generation)return;
+    if(!video.videoWidth||!video.videoHeight){
+      await new Promise((resolve,reject)=>{
+        const timeout=setTimeout(()=>{cleanup();reject(Error('لم تظهر معاينة الكاميرا بعد'));},8000);
+        function cleanup(){clearTimeout(timeout);video.removeEventListener('loadedmetadata',ready);video.removeEventListener('resize',ready);}
+        function ready(){if(video.videoWidth&&video.videoHeight){cleanup();resolve();}}
+        video.addEventListener('loadedmetadata',ready);video.addEventListener('resize',ready);ready();
+      });
+    }
+    if(token!==generation)return;
+    capture.disabled=false;
+    message('الكاميرا جاهزة. يمكنك الالتقاط أو التبديل بين الأمامية والخلفية.');
     await refreshCameras();
-    const actualId=stream.getVideoTracks()[0]?.getSettings()?.deviceId;
+    const actualId=stream?.getVideoTracks()[0]?.getSettings()?.deviceId;
     if(actualId&&availableCameras.some(d=>d.deviceId===actualId))$('cameraDevice').value=actualId;
-    message('الكاميرا تعمل، يمكنك التقاط الصورة أو تبديل الكاميرا.');
-  }catch(e){
+  }catch(err){
     if(acquired&&acquired!==stream)acquired.getTracks().forEach(t=>t.stop());
-    if(token===generation){stopCamera();message('تعذر تشغيل الكاميرا: '+e.message);}
+    if(token===generation){stopCamera();message('تعذر تشغيل الكاميرا: '+cameraError_(err));}
   }finally{cameraBusy=false;}
 }
-async function restartCamera(deviceId=''){
+function restartCamera(deviceId=''){
   if(!cameraTarget||cameraBusy||processing||submitted)return;
   const target=cameraTarget;
-  await openCamera(target,deviceId);
+  openCamera(target,deviceId);
 }
 document.querySelectorAll('[data-camera]').forEach(b=>b.addEventListener('click',()=>{
   $('facing').value=b.dataset.camera==='personal'?'user':'environment';
@@ -304,25 +340,24 @@ $('facing').addEventListener('change',()=>{
 $('cameraDevice').addEventListener('change',e=>restartCamera(e.target.value));
 $('switchCamera').addEventListener('click',()=>{
   if(cameraBusy||!cameraTarget)return;
-  // On multiple-camera systems, cycle through physical cameras.
-  const ids=availableCameras.map(d=>d.deviceId);
-  if(ids.length>1){
-    const current=stream?.getVideoTracks()[0]?.getSettings()?.deviceId||$('cameraDevice').value;
-    const at=ids.indexOf(current);
-    const next=ids[(at+1+ids.length)%ids.length];
-    $('cameraDevice').value=next;restartCamera(next);
-  }else{
-    $('facing').value=$('facing').value==='user'?'environment':'user';
-    $('cameraDevice').value='';restartCamera();
-  }
+  // Always switch by facingMode first, even if the browser enumerates just one physical camera.
+  $('facing').value=$('facing').value==='user'?'environment':'user';
+  $('cameraDevice').value='';
+  restartCamera();
 });
 $('refreshCameras').addEventListener('click',refreshCameras);
 $('closeCamera').addEventListener('click',stopCamera);
 $('capture').addEventListener('click',()=>{
-  if(!stream||!cameraTarget||!video.videoWidth||processing||cameraBusy||submitted)return;
+  if(processing||cameraBusy||submitted)return;
+  if(!stream||!cameraTarget){message('افتح الكاميرا أولاً.');return;}
+  if(!video.videoWidth||!video.videoHeight||video.readyState<2){message('الكاميرا لم تُجهز المعاينة بعد. حاول مجدداً.');return;}
   processing=true;
-  try{const target=cameraTarget;setPhoto(target,encodeJPEG(video,video.videoWidth,video.videoHeight),'camera');stopCamera();}
-  catch(e){message(e.message);}finally{processing=false;}
+  try{
+    const target=cameraTarget;
+    setPhoto(target,encodeJPEG(video,video.videoWidth,video.videoHeight),'camera');
+    stopCamera();
+    $(target+'Preview').scrollIntoView({behavior:'smooth',block:'center'});
+  }catch(err){message('تعذر التقاط الصورة: '+err.message);}finally{processing=false;}
 });
 document.querySelectorAll('[data-upload]').forEach(b=>b.addEventListener('click',()=>{
   if(!processing&&!cameraBusy&&!submitted)$(b.dataset.upload+'File').click();
